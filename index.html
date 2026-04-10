@@ -1,0 +1,1008 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- GitHub Pages → Cloudflare Pages redirect -->
+  <script>
+    (function() {
+      var gh   = 'chrisolowolafe-sys.github.io';
+      var cf   = 'https://vendor-risk-assessment.pages.dev';
+      if (window.location.hostname === gh) {
+        var path = window.location.pathname.replace('/vendor-risk-assessment-tool', '');
+        window.location.replace(cf + path + window.location.search + window.location.hash);
+      }
+    })();
+  </script>
+  <meta charset="UTF-8" />
+
+  <!-- Schema.org structured data -->
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"WebApplication","name":"Vendor Security Risk Assessment Tool","description":"Interactive vendor security risk assessment tool mapping supplier security posture against ISO 27001 and NIST CSF controls. Built by Chris Olowo, PMP®.","url":"https://vendor-risk-assessment.pages.dev","applicationCategory":"BusinessApplication","author":{"@type":"Person","name":"Chris Olowo, PMP®","url":"https://chris-olowo-grc-portfolio.pages.dev"}}
+  </script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Vendor Security Risk Assessment | Chris Olowo, PMP®</title>
+
+  <!-- Security Headers (enforced via Cloudflare _headers — meta kept as fallback) -->
+  <meta http-equiv="X-Frame-Options" content="DENY" />
+  <meta http-equiv="X-Content-Type-Options" content="nosniff" />
+  <meta name="referrer" content="strict-origin-when-cross-origin" />
+
+  <meta name="description" content="Interactive third-party vendor security risk assessment tool. Evaluates supplier security posture across 6 domains mapped to ISO 27001 and NIST CSF controls. Built by Chris Olowo, PMP®." />
+  <meta name="author" content="Chris Olowo, PMP®" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://vendor-risk-assessment.pages.dev/" />
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Vendor Security Risk Assessment Tool — Chris Olowo, PMP®" />
+  <meta property="og:description" content="Interactive third-party vendor security risk assessment. ISO 27001 & NIST CSF mapped. Built by Chris Olowo, PMP®." />
+  <meta property="og:url" content="https://vendor-risk-assessment.pages.dev/" />
+  <meta property="og:site_name" content="Vendor Risk Assessment Tool" />
+
+  <!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Vendor Security Risk Assessment Tool" />
+  <meta name="twitter:description" content="Interactive third-party vendor security risk assessment mapped to ISO 27001 & NIST CSF." />
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230f172a'/><path d='M16 4L6 8v8c0 7 5 13.5 10 15 5-1.5 10-8 10-15V8L16 4z' fill='%235294ff' opacity='.9'/><path d='M12 16l3 3 5-6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round' fill='none'/></svg>" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet" />
+
+  <!-- Chart.js with SRI -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.4/chart.umd.min.js"
+    integrity="sha512-z4PhNX7vuL3xVChQ1m2AB9Yg5AULVxXcg/SpIdNs6c5H0NE8XYXysP+DGNKHfuwvY7kxvUdBeoGlODJ6+SfaPg=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+  <!-- Chart.js safety stub — if CDN fails, install no-op so app never crashes -->
+  <script>
+    (function() {
+      function makeStub() {
+        function ChartStub(ctx, cfg) {
+          this.destroy = function(){};
+          this.update  = function(){};
+          this.data    = cfg && cfg.data ? cfg.data : {};
+        }
+        ChartStub.getChart  = function() { return null; };
+        ChartStub.register  = function() {};
+        ChartStub._stub     = true;
+        window.Chart = ChartStub;
+      }
+      if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', function() { if (typeof Chart !== 'function') makeStub(); });
+      } else {
+        if (typeof Chart !== 'function') makeStub();
+      }
+    })();
+  </script>
+
+  <style>
+    /* ── RESET ── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    @media (prefers-reduced-motion: reduce) { *, *::before, *::after { transition-duration: 0ms !important; animation-duration: 0ms !important; } }
+
+    /* ── DESIGN SYSTEM ── */
+    :root {
+      --bg-void:     #080c14;
+      --bg-base:     #0d1117;
+      --bg-elevated: #161b27;
+      --bg-surface:  #1c2333;
+      --bg-hover:    #212840;
+      --border:      rgba(99,120,180,0.18);
+      --border-strong: rgba(99,120,180,0.35);
+      --text-primary:  #e8edf5;
+      --text-secondary:#8b98b5;
+      --text-muted:    #556080;
+      --accent:   #4f8ef7;
+      --accent-dim: rgba(79,142,247,0.12);
+      --green:    #2ecc8a;
+      --green-dim:rgba(46,204,138,0.12);
+      --red:      #f05252;
+      --red-dim:  rgba(240,82,82,0.12);
+      --orange:   #f5a623;
+      --orange-dim:rgba(245,166,35,0.12);
+      --yellow:   #f5d020;
+      --yellow-dim:rgba(245,208,32,0.12);
+      --purple:   #9b6cff;
+      --font-display: 'Syne', sans-serif;
+      --font-body:    'DM Sans', sans-serif;
+      --font-mono:    'IBM Plex Mono', monospace;
+      --radius:    8px;
+      --radius-lg: 14px;
+      --shadow:    0 4px 24px rgba(0,0,0,0.45);
+      --nh: 58px;
+    }
+
+    /* ── LIGHT MODE ── */
+    body.light {
+      --bg-void:     #f0f2f7;
+      --bg-base:     #f7f8fc;
+      --bg-elevated: #ffffff;
+      --bg-surface:  #eef0f6;
+      --bg-hover:    #e4e8f2;
+      --border:      rgba(60,80,140,0.13);
+      --border-strong:rgba(60,80,140,0.28);
+      --text-primary: #0f1623;
+      --text-secondary:#4a5578;
+      --text-muted:   #8892b0;
+      --accent:  #2563eb;
+      --accent-dim:rgba(37,99,235,0.1);
+      --green:   #16a34a;
+      --green-dim:rgba(22,163,74,0.1);
+      --red:     #dc2626;
+      --red-dim: rgba(220,38,38,0.1);
+      --orange:  #d97706;
+      --orange-dim:rgba(217,119,6,0.1);
+      --shadow:  0 4px 24px rgba(0,0,0,0.08);
+    }
+
+    html { font-size: 14px; scroll-behavior: smooth; }
+    body { font-family: var(--font-body); background: var(--bg-void); color: var(--text-primary); line-height: 1.6; min-height: 100vh; }
+
+    /* ── TOPBAR ── */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
+      height: var(--nh); background: var(--bg-base);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; padding: 0 28px; gap: 16px;
+      backdrop-filter: blur(12px);
+    }
+    .topbar-brand { display: flex; align-items: center; gap: 10px; text-decoration: none; }
+    .brand-mark {
+      width: 32px; height: 32px; border-radius: 8px; flex-shrink: 0;
+      background: linear-gradient(135deg,#4f8ef7,#2563eb);
+      display: flex; align-items: center; justify-content: center;
+      box-shadow: 0 2px 10px rgba(79,142,247,.4);
+    }
+    .brand-mark svg { width: 16px; height: 16px; }
+    .brand-name { font-family: var(--font-display); font-size: 14px; font-weight: 800; color: var(--text-primary); letter-spacing: .01em; }
+    .brand-tag { font-family: var(--font-mono); font-size: 9px; color: var(--accent); letter-spacing: .08em; margin-top: 1px; }
+    .topbar-sep { flex: 1; }
+    .topbar-pill {
+      font-family: var(--font-mono); font-size: 9px; font-weight: 500;
+      letter-spacing: .1em; text-transform: uppercase;
+      padding: 4px 10px; border-radius: 20px;
+      background: var(--accent-dim); color: var(--accent);
+      border: 1px solid rgba(79,142,247,.25);
+    }
+    .theme-btn {
+      width: 34px; height: 34px; border-radius: 8px; border: 1px solid var(--border);
+      background: var(--bg-elevated); color: var(--text-secondary); cursor: pointer;
+      display: flex; align-items: center; justify-content: center; font-size: 15px;
+      transition: background .15s, color .15s;
+    }
+    .theme-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+
+    /* ── LAYOUT ── */
+    .page { padding-top: calc(var(--nh) + 32px); max-width: 900px; margin: 0 auto; padding-left: 24px; padding-right: 24px; padding-bottom: 80px; }
+
+    /* ── HERO ── */
+    .hero { padding: 40px 0 32px; }
+    .hero-eyebrow { font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; color: var(--accent); text-transform: uppercase; margin-bottom: 12px; }
+    .hero h1 { font-family: var(--font-display); font-size: clamp(24px,4vw,36px); font-weight: 800; color: var(--text-primary); line-height: 1.15; margin-bottom: 14px; }
+    .hero p { font-size: 15px; color: var(--text-secondary); max-width: 600px; line-height: 1.7; margin-bottom: 24px; }
+    .framework-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 32px; }
+    .chip {
+      font-family: var(--font-mono); font-size: 10px; letter-spacing: .06em;
+      padding: 4px 10px; border-radius: 20px;
+      border: 1px solid var(--border-strong); color: var(--text-muted);
+      background: var(--bg-elevated);
+    }
+    .chip.iso { border-color: rgba(79,142,247,.35); color: var(--accent); background: var(--accent-dim); }
+    .chip.nist { border-color: rgba(46,204,138,.35); color: var(--green); background: var(--green-dim); }
+    .chip.soc { border-color: rgba(155,108,255,.35); color: var(--purple); background: rgba(155,108,255,.1); }
+
+    /* ── VENDOR INFO FORM ── */
+    .card {
+      background: var(--bg-elevated); border: 1px solid var(--border);
+      border-radius: var(--radius-lg); padding: 28px; margin-bottom: 20px;
+    }
+    .card-header { margin-bottom: 22px; }
+    .card-title { font-family: var(--font-display); font-size: 16px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; }
+    .card-sub { font-size: 12px; color: var(--text-muted); }
+    .domain-badge {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; text-transform: uppercase;
+      padding: 3px 10px; border-radius: 20px; margin-bottom: 16px;
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .form-label { font-size: 11px; font-weight: 600; color: var(--text-secondary); letter-spacing: .04em; text-transform: uppercase; }
+    .form-control {
+      background: var(--bg-surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 10px 14px;
+      color: var(--text-primary); font-family: var(--font-body); font-size: 13px;
+      transition: border-color .15s, box-shadow .15s; outline: none;
+    }
+    .form-control:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(79,142,247,.12); }
+    select.form-control { cursor: pointer; }
+
+    /* ── QUESTIONS ── */
+    .question-block { border-bottom: 1px solid var(--border); padding: 18px 0; }
+    .question-block:last-child { border-bottom: none; padding-bottom: 0; }
+    .question-text { font-size: 13.5px; color: var(--text-primary); margin-bottom: 8px; font-weight: 500; line-height: 1.5; }
+    .question-ref { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-bottom: 12px; }
+    .answer-group { display: flex; flex-wrap: wrap; gap: 8px; }
+    .answer-btn {
+      padding: 7px 16px; border-radius: 20px; font-size: 12px; font-weight: 600;
+      border: 1px solid var(--border-strong); background: var(--bg-surface);
+      color: var(--text-secondary); cursor: pointer; transition: all .15s;
+      font-family: var(--font-body);
+    }
+    .answer-btn:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .answer-btn.sel-yes    { background: var(--green-dim);  color: var(--green);  border-color: rgba(46,204,138,.4); }
+    .answer-btn.sel-partial{ background: var(--orange-dim); color: var(--orange); border-color: rgba(245,166,35,.4); }
+    .answer-btn.sel-no     { background: var(--red-dim);    color: var(--red);    border-color: rgba(240,82,82,.4); }
+    .answer-btn.sel-na     { background: var(--accent-dim); color: var(--accent); border-color: rgba(79,142,247,.3); }
+
+    /* ── PROGRESS ── */
+    .progress-bar-wrap { height: 4px; background: var(--bg-surface); border-radius: 4px; margin-bottom: 28px; overflow: hidden; }
+    .progress-bar-fill { height: 100%; background: linear-gradient(90deg,var(--accent),var(--green)); border-radius: 4px; transition: width .35s ease; }
+    .progress-label { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); margin-bottom: 8px; letter-spacing: .06em; }
+
+    /* ── DOMAIN TABS ── */
+    .domain-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 24px; }
+    .dtab {
+      padding: 6px 14px; border-radius: 20px; font-size: 11.5px; font-weight: 600;
+      border: 1px solid var(--border); background: var(--bg-elevated);
+      color: var(--text-muted); cursor: pointer; transition: all .15s;
+    }
+    .dtab:hover { background: var(--bg-hover); color: var(--text-secondary); }
+    .dtab.active { background: var(--accent-dim); color: var(--accent); border-color: rgba(79,142,247,.35); }
+    .dtab.complete { border-color: rgba(46,204,138,.35); color: var(--green); background: var(--green-dim); }
+
+    /* ── BUTTONS ── */
+    .btn {
+      padding: 11px 24px; border-radius: var(--radius); font-size: 13px; font-weight: 600;
+      cursor: pointer; border: none; font-family: var(--font-body); transition: all .15s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-primary { background: var(--accent); color: #fff; box-shadow: 0 2px 12px rgba(79,142,247,.3); }
+    .btn-primary:hover { background: #6ba3ff; transform: translateY(-1px); box-shadow: 0 4px 20px rgba(79,142,247,.4); }
+    .btn-ghost { background: var(--bg-elevated); color: var(--text-secondary); border: 1px solid var(--border); }
+    .btn-ghost:hover { background: var(--bg-hover); color: var(--text-primary); }
+    .btn-danger { background: var(--red-dim); color: var(--red); border: 1px solid rgba(240,82,82,.3); }
+    .btn-danger:hover { background: rgba(240,82,82,.2); }
+    .btn-group { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 24px; }
+
+    /* ── RISK METER ── */
+    .risk-meter { display: flex; align-items: center; gap: 16px; margin-bottom: 28px; }
+    .risk-badge {
+      padding: 8px 22px; border-radius: 20px; font-family: var(--font-display);
+      font-size: 15px; font-weight: 800; letter-spacing: .02em;
+    }
+    .risk-CRITICAL { background: rgba(240,82,82,.15);  color: var(--red);    border: 1px solid rgba(240,82,82,.4); }
+    .risk-HIGH     { background: var(--orange-dim);    color: var(--orange); border: 1px solid rgba(245,166,35,.4); }
+    .risk-MEDIUM   { background: var(--yellow-dim);    color: var(--yellow); border: 1px solid rgba(245,208,32,.4); }
+    .risk-LOW      { background: var(--green-dim);     color: var(--green);  border: 1px solid rgba(46,204,138,.4); }
+    .risk-score-detail { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); }
+
+    /* ── REPORT ── */
+    .report-section { margin-bottom: 32px; }
+    .report-section-title { font-family: var(--font-display); font-size: 14px; font-weight: 700; color: var(--text-primary); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+    .finding-row { display: grid; grid-template-columns: 1fr 120px 180px; gap: 12px; align-items: start; padding: 12px 0; border-bottom: 1px solid var(--border); font-size: 12.5px; }
+    .finding-row:last-child { border-bottom: none; }
+    .finding-q { color: var(--text-primary); line-height: 1.5; }
+    .finding-ans { font-family: var(--font-mono); font-size: 11px; font-weight: 600; text-align: center; }
+    .finding-ctrl { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); line-height: 1.6; }
+    .domain-score-row { display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; background: var(--bg-surface); border-radius: var(--radius); margin-bottom: 8px; }
+    .domain-score-name { font-size: 13px; font-weight: 600; color: var(--text-primary); }
+    .domain-score-bar-wrap { flex: 1; margin: 0 16px; height: 6px; background: var(--bg-hover); border-radius: 4px; overflow: hidden; }
+    .domain-score-bar { height: 100%; border-radius: 4px; transition: width .5s ease; }
+    .domain-score-val { font-family: var(--font-mono); font-size: 11px; color: var(--text-muted); min-width: 40px; text-align: right; }
+
+    /* ── HISTORY ── */
+    .history-row { display: grid; grid-template-columns: 1fr 160px 100px 120px 80px; gap: 12px; align-items: center; padding: 12px 16px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); margin-bottom: 8px; font-size: 12.5px; transition: background .12s; }
+    .history-row:hover { background: var(--bg-hover); }
+    .history-vendor { font-weight: 600; color: var(--text-primary); }
+    .history-date { color: var(--text-muted); font-family: var(--font-mono); font-size: 11px; }
+    .history-load { font-family: var(--font-mono); font-size: 10px; color: var(--accent); cursor: pointer; text-decoration: underline; }
+    .history-load:hover { color: #6ba3ff; }
+    .history-del { font-size: 13px; cursor: pointer; color: var(--text-muted); transition: color .12s; }
+    .history-del:hover { color: var(--red); }
+    .empty-state { text-align: center; padding: 48px 24px; color: var(--text-muted); font-size: 13px; }
+    .empty-state .es-icon { font-size: 36px; margin-bottom: 12px; }
+
+    /* ── METRICS ROW ── */
+    .metrics-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 28px; }
+    .metric-card { background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 18px 16px; }
+    .metric-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .1em; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px; }
+    .metric-val { font-family: var(--font-display); font-size: 26px; font-weight: 800; color: var(--text-primary); }
+    .metric-sub { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+    /* ── TOAST ── */
+    #toast {
+      position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+      background: var(--bg-elevated); border: 1px solid var(--border-strong);
+      color: var(--text-primary); padding: 10px 22px; border-radius: 24px;
+      font-size: 13px; font-weight: 500; z-index: 9999; opacity: 0;
+      transition: opacity .25s, transform .25s; pointer-events: none;
+      box-shadow: var(--shadow); white-space: nowrap;
+    }
+    #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+    /* ── FOOTER ── */
+    footer { border-top: 1px solid var(--border); margin-top: 60px; padding: 24px; text-align: center; font-size: 11px; color: var(--text-muted); line-height: 1.8; }
+    footer a { color: var(--text-muted); text-decoration: none; }
+    footer a:hover { color: var(--accent); }
+
+    /* ── NAV SECTION TABS ── */
+    .section-nav { display: flex; gap: 4px; background: var(--bg-elevated); border: 1px solid var(--border); border-radius: var(--radius); padding: 4px; margin-bottom: 28px; }
+    .snav-btn { flex: 1; padding: 8px 12px; border-radius: 6px; font-size: 12px; font-weight: 600; border: none; background: transparent; color: var(--text-muted); cursor: pointer; transition: all .15s; text-align: center; font-family: var(--font-body); }
+    .snav-btn:hover { background: var(--bg-hover); color: var(--text-secondary); }
+    .snav-btn.active { background: var(--accent); color: #fff; box-shadow: 0 2px 8px rgba(79,142,247,.3); }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      .form-row { grid-template-columns: 1fr; }
+      .metrics-row { grid-template-columns: 1fr 1fr; }
+      .finding-row { grid-template-columns: 1fr; }
+      .history-row { grid-template-columns: 1fr 1fr; }
+      .history-row > *:nth-child(3), .history-row > *:nth-child(4) { display: none; }
+      .section-nav { flex-wrap: wrap; }
+    }
+
+    /* ── PRINT ── */
+    @media print {
+      .topbar, .btn-group, .section-nav, footer, #toast, .theme-btn, .topbar-pill { display: none !important; }
+      .page { padding-top: 0; }
+      body { background: white; color: black; }
+      .card { border: 1px solid #ccc; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<nav class="topbar">
+  <a href="#" class="topbar-brand" onclick="showSection('assess');return false;">
+    <div class="brand-mark">
+      <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 2L3 7v7c0 5.5 3.8 10.7 9 12 5.2-1.3 9-6.5 9-12V7L12 2z" fill="rgba(255,255,255,0.9)"/>
+        <path d="M9 12l2.5 2.5L15 9" stroke="#2563eb" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">Vendor Risk Assessment</div>
+      <div class="brand-tag">ISO 27001 · NIST CSF · SOC 2</div>
+    </div>
+  </a>
+  <div class="topbar-sep"></div>
+  <span class="topbar-pill">GRC TOOL v1.0</span>
+  <button class="theme-btn" onclick="toggleTheme()" title="Toggle theme" aria-label="Toggle light/dark mode">🌙</button>
+</nav>
+
+<!-- PAGE -->
+<div class="page">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-eyebrow">Third-Party Risk Management</div>
+    <h1>Vendor Security<br>Risk Assessment</h1>
+    <p>Evaluate your supplier's security posture across 6 domains. Each question maps to ISO 27001 controls and NIST CSF functions. Generate a risk-rated report with recommended risk treatments.</p>
+    <div class="framework-chips">
+      <span class="chip iso">ISO 27001:2022</span>
+      <span class="chip nist">NIST CSF 2.0</span>
+      <span class="chip soc">SOC 2 Type II</span>
+      <span class="chip">GDPR Art. 28</span>
+      <span class="chip">PIPEDA</span>
+      <span class="chip">Third-Party Risk</span>
+    </div>
+  </div>
+
+  <!-- SECTION NAV -->
+  <div class="section-nav">
+    <button class="snav-btn active" onclick="showSection('assess')" id="tab-assess">📋 New Assessment</button>
+    <button class="snav-btn" onclick="showSection('report')" id="tab-report">📊 Report</button>
+    <button class="snav-btn" onclick="showSection('history')" id="tab-history">🗂 History</button>
+  </div>
+
+  <!-- ══════════════ ASSESSMENT ══════════════ -->
+  <div id="sec-assess">
+
+    <!-- Vendor Info -->
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Vendor Information</div>
+        <div class="card-sub">Enter details about the vendor being assessed</div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Vendor / Supplier Name *</label>
+          <input class="form-control" id="v-name" type="text" placeholder="e.g. Acme Cloud Solutions" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Assessor Name *</label>
+          <input class="form-control" id="v-assessor" type="text" placeholder="e.g. Chris Olowo, PMP®" />
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Vendor Category</label>
+          <select class="form-control" id="v-category">
+            <option value="">Select category…</option>
+            <option>SaaS / Cloud Provider</option>
+            <option>Infrastructure / Hosting</option>
+            <option>Data Processor</option>
+            <option>Professional Services</option>
+            <option>Hardware / Device Supplier</option>
+            <option>Financial Services</option>
+            <option>Healthcare Technology</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Data Classification</label>
+          <select class="form-control" id="v-data">
+            <option value="">Select…</option>
+            <option>Public</option>
+            <option>Internal / Confidential</option>
+            <option>Sensitive / PII</option>
+            <option>Highly Sensitive / PHI / Financial</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-row single">
+        <div class="form-group">
+          <label class="form-label">Assessment Notes (optional)</label>
+          <input class="form-control" id="v-notes" type="text" placeholder="e.g. Annual renewal review, onboarding assessment…" />
+        </div>
+      </div>
+    </div>
+
+    <!-- Domain Tabs -->
+    <div class="progress-label" id="progress-label">Progress: 0 / 29 questions answered</div>
+    <div class="progress-bar-wrap"><div class="progress-bar-fill" id="progress-bar" style="width:0%"></div></div>
+    <div class="domain-tabs" id="domain-tabs"></div>
+
+    <!-- Questions container -->
+    <div id="questions-container"></div>
+
+    <!-- Actions -->
+    <div class="btn-group">
+      <button class="btn btn-primary" onclick="generateReport()">⚡ Generate Risk Report</button>
+      <button class="btn btn-ghost" onclick="resetAssessment()">↺ Reset</button>
+    </div>
+
+  </div>
+
+  <!-- ══════════════ REPORT ══════════════ -->
+  <div id="sec-report" style="display:none">
+    <div id="report-content">
+      <div class="empty-state">
+        <div class="es-icon">📋</div>
+        <div>Complete an assessment first to generate your report.</div>
+        <br>
+        <button class="btn btn-ghost" onclick="showSection('assess')">← Start Assessment</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ══════════════ HISTORY ══════════════ -->
+  <div id="sec-history" style="display:none">
+    <div class="card">
+      <div class="card-header">
+        <div class="card-title">Assessment History</div>
+        <div class="card-sub">All assessments are stored locally in your browser. No data leaves your device.</div>
+      </div>
+      <div id="history-list"></div>
+    </div>
+  </div>
+
+</div><!-- /page -->
+
+<!-- TOAST -->
+<div id="toast"></div>
+
+<!-- FOOTER -->
+<footer>
+  <p>Built by <a href="https://chris-olowo-grc-portfolio.pages.dev" target="_blank" rel="noopener noreferrer">Chris Olowo, PMP®</a> · GRC Analyst & Risk Practitioner · Canada</p>
+  <p style="margin-top:6px">Data stored locally in your browser · No data leaves your device · <a href="https://chris-olowo-grc-portfolio.pages.dev" target="_blank" rel="noopener noreferrer">Portfolio →</a></p>
+  <p style="margin-top:6px; opacity:.5">For demonstration and educational purposes only. Not a certified compliance platform or legal service.</p>
+</footer>
+
+<script>
+// ── HTTPS ENFORCEMENT ───────────────────────────────────────────────────────
+if (location.protocol === 'http:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+  location.replace('https:' + location.href.slice(5));
+}
+
+// ── THEME ───────────────────────────────────────────────────────────────────
+(function() {
+  try { if (localStorage.getItem('vra_theme') === 'light') { document.body.classList.add('light'); } } catch(e) {}
+})();
+function toggleTheme() {
+  var isLight = document.body.classList.toggle('light');
+  try { localStorage.setItem('vra_theme', isLight ? 'light' : 'dark'); } catch(e) {}
+  document.querySelector('.theme-btn').textContent = isLight ? '☀️' : '🌙';
+}
+// sync icon on load
+(function() {
+  try { if (localStorage.getItem('vra_theme') === 'light') document.querySelector('.theme-btn').textContent = '☀️'; } catch(e) {}
+})();
+
+// ── TOAST ───────────────────────────────────────────────────────────────────
+var _toastTimer;
+function showToast(msg) {
+  var t = document.getElementById('toast');
+  t.textContent = msg; t.classList.add('show');
+  clearTimeout(_toastTimer);
+  _toastTimer = setTimeout(function() { t.classList.remove('show'); }, 2800);
+}
+
+// ── SECTION NAV ─────────────────────────────────────────────────────────────
+function showSection(name) {
+  ['assess','report','history'].forEach(function(s) {
+    document.getElementById('sec-'+s).style.display = s === name ? '' : 'none';
+    var btn = document.getElementById('tab-'+s);
+    if (btn) btn.classList.toggle('active', s === name);
+  });
+  if (name === 'history') renderHistory();
+}
+
+// ── ASSESSMENT DATA ─────────────────────────────────────────────────────────
+var DOMAINS = [
+  {
+    id: 'data',
+    label: 'Data Security',
+    icon: '🔐',
+    color: 'var(--accent)',
+    colorDim: 'var(--accent-dim)',
+    borderColor: 'rgba(79,142,247,.35)',
+    questions: [
+      { id: 'ds1', text: 'Does the vendor encrypt data at rest using AES-256 or equivalent?', ref: 'ISO 27001 A.8.24 · NIST PR.DS-01 · SOC 2 CC6.1', weight: 2 },
+      { id: 'ds2', text: 'Does the vendor encrypt all data in transit using TLS 1.2 or higher?', ref: 'ISO 27001 A.8.24 · NIST PR.DS-02 · SOC 2 CC6.7', weight: 2 },
+      { id: 'ds3', text: 'Does the vendor maintain a data classification policy and apply controls accordingly?', ref: 'ISO 27001 A.5.12 · NIST ID.AM-05 · GDPR Art. 25', weight: 1 },
+      { id: 'ds4', text: 'Is personal data processing documented and lawful under applicable privacy regulations (GDPR, PIPEDA)?', ref: 'ISO 27001 A.5.34 · GDPR Art. 28 · PIPEDA Principle 4', weight: 2 },
+      { id: 'ds5', text: 'Does the vendor have a documented data retention and secure disposal policy?', ref: 'ISO 27001 A.8.10 · NIST PR.DS-03 · SOC 2 CC6.5', weight: 1 },
+    ]
+  },
+  {
+    id: 'access',
+    label: 'Access Controls',
+    icon: '🔑',
+    color: 'var(--green)',
+    colorDim: 'var(--green-dim)',
+    borderColor: 'rgba(46,204,138,.35)',
+    questions: [
+      { id: 'ac1', text: 'Does the vendor enforce multi-factor authentication (MFA) for all privileged and remote access?', ref: 'ISO 27001 A.8.5 · NIST PR.AC-07 · SOC 2 CC6.1', weight: 2 },
+      { id: 'ac2', text: 'Is role-based access control (RBAC) implemented with least-privilege principles?', ref: 'ISO 27001 A.5.15 · NIST PR.AC-04 · SOC 2 CC6.3', weight: 2 },
+      { id: 'ac3', text: 'Does the vendor conduct periodic user access reviews (UARs) at least annually?', ref: 'ISO 27001 A.8.2 · NIST PR.AC-01 · SOC 2 CC6.2', weight: 2 },
+      { id: 'ac4', text: 'Are privileged accounts (admin/root) separately managed with additional controls?', ref: 'ISO 27001 A.8.2 · NIST PR.AC-05 · SOC 2 CC6.1', weight: 2 },
+      { id: 'ac5', text: 'Is there a documented offboarding process that promptly revokes access upon employee termination?', ref: 'ISO 27001 A.6.5 · NIST PR.AC-01 · SOC 2 CC6.2', weight: 1 },
+    ]
+  },
+  {
+    id: 'incident',
+    label: 'Incident Response',
+    icon: '🚨',
+    color: 'var(--red)',
+    colorDim: 'var(--red-dim)',
+    borderColor: 'rgba(240,82,82,.35)',
+    questions: [
+      { id: 'ir1', text: 'Does the vendor have a documented Incident Response Plan (IRP) that has been tested within the last 12 months?', ref: 'ISO 27001 A.5.26 · NIST RS.RP-01 · SOC 2 CC7.3', weight: 2 },
+      { id: 'ir2', text: 'Will the vendor notify your organization of a data breach within 72 hours (aligned with GDPR Art. 33)?', ref: 'ISO 27001 A.5.26 · GDPR Art. 33 · PIPEDA Breach Reg.', weight: 2 },
+      { id: 'ir3', text: 'Does the vendor maintain security incident logs and conduct post-incident reviews?', ref: 'ISO 27001 A.8.15 · NIST RS.AN-02 · SOC 2 CC7.4', weight: 1 },
+      { id: 'ir4', text: 'Has the vendor experienced a significant security incident in the past 24 months? (No = better score)', ref: 'ISO 27001 A.5.27 · NIST ID.RA-05', weight: 2 },
+      { id: 'ir5', text: 'Does the vendor conduct security awareness training for all staff at least annually?', ref: 'ISO 27001 A.6.3 · NIST PR.AT-01 · SOC 2 CC1.4', weight: 1 },
+    ]
+  },
+  {
+    id: 'continuity',
+    label: 'Business Continuity',
+    icon: '⚙️',
+    color: 'var(--orange)',
+    colorDim: 'var(--orange-dim)',
+    borderColor: 'rgba(245,166,35,.35)',
+    questions: [
+      { id: 'bc1', text: 'Does the vendor have a Business Continuity Plan (BCP) and Disaster Recovery Plan (DRP) that is tested annually?', ref: 'ISO 27001 A.5.29 · NIST RC.RP-01 · SOC 2 A1.3', weight: 2 },
+      { id: 'bc2', text: 'Does the vendor maintain documented Recovery Time Objectives (RTO) and Recovery Point Objectives (RPO)?', ref: 'ISO 27001 A.5.30 · NIST RC.RP-01 · SOC 2 A1.2', weight: 1 },
+      { id: 'bc3', text: 'Are regular data backups performed and restoration tested at least quarterly?', ref: 'ISO 27001 A.8.13 · NIST PR.DS-04 · SOC 2 A1.2', weight: 2 },
+      { id: 'bc4', text: 'Does the vendor maintain redundant infrastructure (multi-region or failover)?', ref: 'ISO 27001 A.8.14 · NIST PR.DS-04 · SOC 2 A1.1', weight: 1 },
+    ]
+  },
+  {
+    id: 'compliance',
+    label: 'Compliance',
+    icon: '📋',
+    color: 'var(--purple)',
+    colorDim: 'rgba(155,108,255,0.12)',
+    borderColor: 'rgba(155,108,255,.35)',
+    questions: [
+      { id: 'cp1', text: 'Does the vendor hold a current ISO 27001 certification or SOC 2 Type II report?', ref: 'ISO 27001 A.5.36 · SOC 2 · NIST GV.OC-05', weight: 2 },
+      { id: 'cp2', text: 'Does the vendor conduct annual penetration testing by an independent third party?', ref: 'ISO 27001 A.8.8 · NIST ID.RA-05 · SOC 2 CC7.1', weight: 2 },
+      { id: 'cp3', text: 'Does the vendor have a documented vulnerability management program with defined SLAs for patching?', ref: 'ISO 27001 A.8.8 · NIST ID.RA-01 · SOC 2 CC7.1', weight: 1 },
+      { id: 'cp4', text: 'Is there a signed Data Processing Agreement (DPA) or equivalent contractual security obligations in place?', ref: 'ISO 27001 A.5.20 · GDPR Art. 28 · PIPEDA', weight: 2 },
+      { id: 'cp5', text: 'Does the vendor maintain a documented information security policy approved by senior management?', ref: 'ISO 27001 A.5.1 · NIST GV.PO-01 · SOC 2 CC1.3', weight: 1 },
+    ]
+  },
+  {
+    id: 'subprocessor',
+    label: 'Sub-processors',
+    icon: '🔗',
+    color: 'var(--yellow)',
+    colorDim: 'var(--yellow-dim)',
+    borderColor: 'rgba(245,208,32,.35)',
+    questions: [
+      { id: 'sp1', text: 'Does the vendor maintain a register of all sub-processors and notify customers of changes?', ref: 'ISO 27001 A.5.19 · GDPR Art. 28(2) · NIST ID.SC-03', weight: 1 },
+      { id: 'sp2', text: 'Does the vendor perform security assessments on its own sub-processors/suppliers?', ref: 'ISO 27001 A.5.19 · NIST ID.SC-02 · SOC 2 CC9.2', weight: 2 },
+      { id: 'sp3', text: 'Are contractual security requirements flowed down to all sub-processors?', ref: 'ISO 27001 A.5.20 · NIST ID.SC-04 · GDPR Art. 28', weight: 2 },
+      { id: 'sp4', text: 'Does the vendor have a software supply chain security policy (e.g. SBOM, code signing, SCA)?', ref: 'ISO 27001 A.8.30 · NIST ID.SC-04 · NIST PR.DS-06', weight: 1 },
+    ]
+  }
+];
+
+// Answers: null=unanswered, 'yes'=0pts, 'partial'=1pt, 'no'=2pts, 'na'=skip
+var answers = {};
+var currentDomain = 0;
+
+function totalQuestions() {
+  return DOMAINS.reduce(function(s,d) { return s + d.questions.length; }, 0);
+}
+
+function answeredCount() {
+  return Object.keys(answers).filter(function(k) { return answers[k] !== null && answers[k] !== undefined; }).length;
+}
+
+function domainAnswered(d) {
+  return d.questions.every(function(q) { return answers[q.id] !== null && answers[q.id] !== undefined; });
+}
+
+// ── RENDER DOMAIN TABS ───────────────────────────────────────────────────────
+function renderDomainTabs() {
+  var el = document.getElementById('domain-tabs');
+  el.innerHTML = '';
+  DOMAINS.forEach(function(d, i) {
+    var btn = document.createElement('button');
+    btn.className = 'dtab' + (i === currentDomain ? ' active' : '') + (domainAnswered(d) ? ' complete' : '');
+    btn.textContent = d.icon + ' ' + d.label;
+    btn.onclick = (function(idx) { return function() { currentDomain = idx; renderQuestions(); renderDomainTabs(); }; })(i);
+    el.appendChild(btn);
+  });
+}
+
+// ── RENDER QUESTIONS ─────────────────────────────────────────────────────────
+function renderQuestions() {
+  var d = DOMAINS[currentDomain];
+  var container = document.getElementById('questions-container');
+  container.innerHTML = '';
+
+  var card = document.createElement('div');
+  card.className = 'card';
+
+  var header = document.createElement('div');
+  header.className = 'card-header';
+  header.innerHTML = '<div class="domain-badge" style="background:' + d.colorDim + ';color:' + d.color + ';border:1px solid ' + d.borderColor + '">'
+    + d.icon + ' ' + d.label + ' — Domain ' + (currentDomain+1) + ' of ' + DOMAINS.length + '</div>'
+    + '<div class="card-title">' + d.label + ' Assessment</div>'
+    + '<div class="card-sub">Answer all questions. N/A = not applicable to this vendor.</div>';
+  card.appendChild(header);
+
+  d.questions.forEach(function(q) {
+    var block = document.createElement('div');
+    block.className = 'question-block';
+    block.innerHTML = '<div class="question-text">' + q.text + '</div>'
+      + '<div class="question-ref">📎 ' + q.ref + '</div>'
+      + '<div class="answer-group" id="ag-' + q.id + '"></div>';
+    card.appendChild(block);
+
+    // Render answer buttons after block is in card
+    setTimeout(function(qid, weightVal) {
+      var ag = document.getElementById('ag-' + qid);
+      if (!ag) return;
+      [
+        { val: 'yes',     label: '✓ Yes',     cls: 'sel-yes' },
+        { val: 'partial', label: '~ Partial',  cls: 'sel-partial' },
+        { val: 'no',      label: '✗ No',      cls: 'sel-no' },
+        { val: 'na',      label: '— N/A',     cls: 'sel-na' },
+      ].forEach(function(opt) {
+        var btn = document.createElement('button');
+        btn.className = 'answer-btn' + (answers[qid] === opt.val ? ' ' + opt.cls : '');
+        btn.textContent = opt.label;
+        btn.onclick = (function(qidInner, optInner) {
+          return function() {
+            answers[qidInner] = optInner.val;
+            renderQuestions();
+            renderDomainTabs();
+            updateProgress();
+          };
+        })(qid, opt);
+        ag.appendChild(btn);
+      });
+    }, 0, q.id, q.weight);
+  });
+
+  // Nav buttons
+  var nav = document.createElement('div');
+  nav.className = 'btn-group';
+  if (currentDomain > 0) {
+    var prev = document.createElement('button');
+    prev.className = 'btn btn-ghost';
+    prev.textContent = '← Previous Domain';
+    prev.onclick = function() { currentDomain--; renderQuestions(); renderDomainTabs(); };
+    nav.appendChild(prev);
+  }
+  if (currentDomain < DOMAINS.length - 1) {
+    var next = document.createElement('button');
+    next.className = 'btn btn-primary';
+    next.textContent = 'Next Domain →';
+    next.onclick = function() { currentDomain++; renderQuestions(); renderDomainTabs(); };
+    nav.appendChild(next);
+  }
+  card.appendChild(nav);
+  container.appendChild(card);
+  updateProgress();
+}
+
+// ── PROGRESS ─────────────────────────────────────────────────────────────────
+function updateProgress() {
+  var total = totalQuestions();
+  var done  = answeredCount();
+  var pct   = Math.round(done / total * 100);
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('progress-label').textContent = 'Progress: ' + done + ' / ' + total + ' questions answered (' + pct + '%)';
+}
+
+// ── SCORING ──────────────────────────────────────────────────────────────────
+var SCORE_MAP = { yes: 0, partial: 1, no: 2, na: null };
+var RISK_THRESHOLDS = [
+  { max: 10,  rating: 'LOW',      label: 'Low Risk',      color: 'var(--green)',  desc: 'Vendor demonstrates strong security controls. Proceed with standard contractual protections.' },
+  { max: 22,  rating: 'MEDIUM',   label: 'Medium Risk',   color: 'var(--yellow)', desc: 'Vendor has notable gaps. Proceed with additional contractual requirements and monitoring.' },
+  { max: 34,  rating: 'HIGH',     label: 'High Risk',     color: 'var(--orange)', desc: 'Vendor has significant security deficiencies. Escalate for senior review before proceeding.' },
+  { max: 999, rating: 'CRITICAL', label: 'Critical Risk', color: 'var(--red)',    desc: 'Vendor poses unacceptable risk. Do not proceed without formal risk acceptance and remediation plan.' },
+];
+
+function calcScore() {
+  var total = 0, maxPossible = 0;
+  var domainScores = {};
+  DOMAINS.forEach(function(d) {
+    var ds = 0, dm = 0;
+    d.questions.forEach(function(q) {
+      var w = q.weight || 1;
+      var ans = answers[q.id];
+      if (ans === 'na' || ans === null || ans === undefined) return;
+      var pts = SCORE_MAP[ans];
+      ds += pts * w;
+      dm += 2 * w; // max 2 pts per question
+    });
+    domainScores[d.id] = { score: ds, max: dm, pct: dm > 0 ? Math.round(ds / dm * 100) : 0 };
+    total += ds;
+    maxPossible += dm;
+  });
+  var risk = RISK_THRESHOLDS.find(function(t) { return total <= t.max; }) || RISK_THRESHOLDS[RISK_THRESHOLDS.length-1];
+  return { total: total, max: maxPossible, risk: risk, domainScores: domainScores };
+}
+
+// ── GENERATE REPORT ───────────────────────────────────────────────────────────
+function generateReport() {
+  var vname = (document.getElementById('v-name').value || '').trim();
+  var vassessor = (document.getElementById('v-assessor').value || '').trim();
+  if (!vname) { showToast('⚠️ Please enter the vendor name first.'); return; }
+  if (answeredCount() < 10) { showToast('⚠️ Please answer at least 10 questions before generating a report.'); return; }
+
+  var sc = calcScore();
+  var now = new Date();
+  var dateStr = now.toLocaleDateString('en-CA', { year:'numeric', month:'long', day:'numeric' });
+  var dateISO = now.toISOString().split('T')[0];
+
+  // Save to history
+  saveToHistory({
+    id: Date.now(),
+    vendor: vname,
+    assessor: vassessor,
+    category: document.getElementById('v-category').value,
+    data: document.getElementById('v-data').value,
+    notes: document.getElementById('v-notes').value,
+    date: dateISO,
+    dateDisplay: dateStr,
+    risk: sc.risk.rating,
+    score: sc.total,
+    max: sc.max,
+    answers: JSON.parse(JSON.stringify(answers)),
+  });
+
+  // Build report HTML
+  var html = '';
+
+  // Header
+  html += '<div class="card" style="border-color:' + sc.risk.color + ';border-width:2px">';
+  html += '<div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:12px;margin-bottom:20px">';
+  html += '<div><div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:.1em;text-transform:uppercase;margin-bottom:4px">Vendor Risk Assessment Report</div>';
+  html += '<div style="font-family:var(--font-display);font-size:22px;font-weight:800;color:var(--text-primary)">' + escHtml(vname) + '</div>';
+  html += '<div style="font-size:12px;color:var(--text-muted);margin-top:4px">Assessed by: ' + escHtml(vassessor || '—') + ' &nbsp;·&nbsp; ' + dateStr + '</div></div>';
+  html += '<div class="risk-badge risk-' + sc.risk.rating + '">' + sc.risk.label + '</div></div>';
+
+  // Metrics
+  html += '<div class="metrics-row">';
+  html += metricCard('Risk Score', sc.total + ' / ' + sc.max, 'Weighted total');
+  html += metricCard('Risk Rating', sc.risk.label, sc.risk.rating);
+  html += metricCard('Questions', answeredCount() + ' / ' + totalQuestions(), 'Answered');
+  html += metricCard('Domains', DOMAINS.filter(function(d){return domainAnswered(d);}).length + ' / ' + DOMAINS.length, 'Complete');
+  html += '</div>';
+
+  // Risk summary
+  html += '<div style="background:' + sc.risk.color.replace(')',',0.1)').replace('var(','rgba(').replace('--green','46,204,138').replace('--yellow','245,208,32').replace('--orange','245,166,35').replace('--red','240,82,82') + ';border:1px solid ' + sc.risk.color + ';border-radius:8px;padding:14px 18px;margin-bottom:0;font-size:13px;color:var(--text-primary)">';
+  html += '<strong>Risk Summary:</strong> ' + sc.risk.desc + '</div>';
+  html += '</div>';
+
+  // Domain scores
+  html += '<div class="card"><div class="report-section-title">Domain Risk Breakdown</div>';
+  DOMAINS.forEach(function(d) {
+    var ds = sc.domainScores[d.id];
+    var pct = ds.pct;
+    var barColor = pct < 30 ? 'var(--green)' : pct < 55 ? 'var(--yellow)' : pct < 75 ? 'var(--orange)' : 'var(--red)';
+    html += '<div class="domain-score-row">';
+    html += '<div class="domain-score-name">' + d.icon + ' ' + d.label + '</div>';
+    html += '<div class="domain-score-bar-wrap"><div class="domain-score-bar" style="width:' + pct + '%;background:' + barColor + '"></div></div>';
+    html += '<div class="domain-score-val">' + ds.score + '/' + ds.max + ' (' + pct + '%)</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Findings table
+  html += '<div class="card"><div class="report-section-title">Detailed Findings</div>';
+  DOMAINS.forEach(function(d) {
+    html += '<div style="margin-bottom:20px">';
+    html += '<div style="font-family:var(--font-mono);font-size:10px;letter-spacing:.1em;color:' + d.color + ';text-transform:uppercase;margin-bottom:10px;padding:4px 10px;background:' + d.colorDim + ';border-radius:4px;display:inline-block">' + d.icon + ' ' + d.label + '</div>';
+    html += '<div style="display:grid;grid-template-columns:1fr 90px 180px;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase"><span>Question</span><span style="text-align:center">Response</span><span>Controls</span></div>';
+    d.questions.forEach(function(q) {
+      var ans = answers[q.id];
+      if (!ans) return;
+      var ansLabel = ans === 'yes' ? '✓ Yes' : ans === 'partial' ? '~ Partial' : ans === 'no' ? '✗ No' : '— N/A';
+      var ansColor = ans === 'yes' ? 'var(--green)' : ans === 'partial' ? 'var(--orange)' : ans === 'no' ? 'var(--red)' : 'var(--accent)';
+      html += '<div class="finding-row">';
+      html += '<div class="finding-q">' + escHtml(q.text) + '</div>';
+      html += '<div class="finding-ans" style="color:' + ansColor + '">' + ansLabel + '</div>';
+      html += '<div class="finding-ctrl">' + escHtml(q.ref) + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  });
+  html += '</div>';
+
+  // Recommendations
+  var gaps = [];
+  DOMAINS.forEach(function(d) {
+    d.questions.forEach(function(q) {
+      if (answers[q.id] === 'no' || answers[q.id] === 'partial') {
+        gaps.push({ domain: d.label, icon: d.icon, q: q.text, ans: answers[q.id], ref: q.ref, weight: q.weight });
+      }
+    });
+  });
+  gaps.sort(function(a,b) { return (b.weight||1) - (a.weight||1); });
+
+  if (gaps.length > 0) {
+    html += '<div class="card"><div class="report-section-title">Recommended Risk Treatments</div>';
+    gaps.slice(0, 10).forEach(function(g, i) {
+      var severity = (g.ans === 'no' && g.weight === 2) ? 'Critical' : g.ans === 'no' ? 'High' : 'Medium';
+      var sevColor = severity === 'Critical' ? 'var(--red)' : severity === 'High' ? 'var(--orange)' : 'var(--yellow)';
+      html += '<div style="display:grid;grid-template-columns:24px 1fr 80px;gap:12px;align-items:start;padding:12px 0;border-bottom:1px solid var(--border)">';
+      html += '<div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted);padding-top:2px">' + (i+1) + '</div>';
+      html += '<div><div style="font-size:13px;color:var(--text-primary);font-weight:500;margin-bottom:4px">' + g.icon + ' ' + escHtml(g.q) + '</div>';
+      html += '<div style="font-family:var(--font-mono);font-size:10px;color:var(--text-muted)">' + escHtml(g.ref) + '</div></div>';
+      html += '<div style="font-family:var(--font-mono);font-size:10px;font-weight:700;color:' + sevColor + ';text-align:right;padding-top:3px">' + severity + '</div>';
+      html += '</div>';
+    });
+    html += '</div>';
+  }
+
+  // Actions
+  html += '<div class="btn-group">';
+  html += '<button class="btn btn-primary" onclick="window.print()">🖨 Print / Save PDF</button>';
+  html += '<button class="btn btn-ghost" onclick="exportJSON()">⬇ Export JSON</button>';
+  html += '<button class="btn btn-ghost" onclick="showSection(\'assess\')">← New Assessment</button>';
+  html += '</div>';
+
+  document.getElementById('report-content').innerHTML = html;
+  showSection('report');
+  showToast('✅ Report generated for ' + vname);
+}
+
+function metricCard(label, val, sub) {
+  return '<div class="metric-card"><div class="metric-label">' + label + '</div><div class="metric-val">' + val + '</div><div class="metric-sub">' + sub + '</div></div>';
+}
+
+function escHtml(s) {
+  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+// ── HISTORY ───────────────────────────────────────────────────────────────────
+function getHistory() {
+  try { return JSON.parse(localStorage.getItem('vra_history') || '[]'); } catch(e) { return []; }
+}
+function saveHistory(h) {
+  try { localStorage.setItem('vra_history', JSON.stringify(h)); } catch(e) {}
+}
+function saveToHistory(entry) {
+  var h = getHistory();
+  h.unshift(entry);
+  if (h.length > 50) h = h.slice(0, 50);
+  saveHistory(h);
+}
+
+function renderHistory() {
+  var h = getHistory();
+  var el = document.getElementById('history-list');
+  if (!h.length) {
+    el.innerHTML = '<div class="empty-state"><div class="es-icon">🗂</div><div>No assessments saved yet. Complete your first assessment to see it here.</div></div>';
+    return;
+  }
+  var html = '<div style="display:grid;grid-template-columns:1fr 160px 90px 120px 80px;gap:12px;padding:8px 16px;font-family:var(--font-mono);font-size:10px;color:var(--text-muted);letter-spacing:.06em;text-transform:uppercase;border-bottom:1px solid var(--border);margin-bottom:8px"><span>Vendor</span><span>Date</span><span>Rating</span><span>Score</span><span></span></div>';
+  h.forEach(function(entry, idx) {
+    var ratingColor = entry.risk === 'LOW' ? 'var(--green)' : entry.risk === 'MEDIUM' ? 'var(--yellow)' : entry.risk === 'HIGH' ? 'var(--orange)' : 'var(--red)';
+    html += '<div class="history-row">';
+    html += '<div><div class="history-vendor">' + escHtml(entry.vendor) + '</div><div style="font-size:11px;color:var(--text-muted);margin-top:2px">' + escHtml(entry.category||'') + (entry.assessor ? ' · ' + escHtml(entry.assessor) : '') + '</div></div>';
+    html += '<div class="history-date">' + (entry.dateDisplay || entry.date || '—') + '</div>';
+    html += '<div style="font-family:var(--font-mono);font-size:11px;font-weight:700;color:' + ratingColor + '">' + entry.risk + '</div>';
+    html += '<div style="font-family:var(--font-mono);font-size:11px;color:var(--text-muted)">' + entry.score + '/' + entry.max + '</div>';
+    html += '<div style="display:flex;gap:10px;align-items:center">';
+    html += '<span class="history-load" onclick="loadAssessment(' + idx + ')">Load</span>';
+    html += '<span class="history-del" onclick="deleteHistory(' + idx + ')" title="Delete">🗑</span>';
+    html += '</div></div>';
+  });
+  el.innerHTML = html;
+}
+
+function loadAssessment(idx) {
+  var h = getHistory();
+  var entry = h[idx];
+  if (!entry) return;
+  document.getElementById('v-name').value = entry.vendor || '';
+  document.getElementById('v-assessor').value = entry.assessor || '';
+  document.getElementById('v-category').value = entry.category || '';
+  document.getElementById('v-data').value = entry.data || '';
+  document.getElementById('v-notes').value = entry.notes || '';
+  answers = JSON.parse(JSON.stringify(entry.answers || {}));
+  currentDomain = 0;
+  renderDomainTabs();
+  renderQuestions();
+  showSection('assess');
+  showToast('📂 Loaded: ' + entry.vendor);
+}
+
+function deleteHistory(idx) {
+  var h = getHistory();
+  var name = h[idx] ? h[idx].vendor : '';
+  h.splice(idx, 1);
+  saveHistory(h);
+  renderHistory();
+  showToast('🗑 Deleted: ' + name);
+}
+
+// ── EXPORT ───────────────────────────────────────────────────────────────────
+function exportJSON() {
+  var h = getHistory();
+  var data = { exported: new Date().toISOString(), tool: 'Vendor Security Risk Assessment', author: 'Chris Olowo, PMP®', assessments: h };
+  var blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+  var url  = URL.createObjectURL(blob);
+  var a    = document.createElement('a');
+  a.href = url; a.download = 'vendor-risk-assessments-' + new Date().toISOString().split('T')[0] + '.json';
+  a.click(); URL.revokeObjectURL(url);
+  showToast('⬇ Export complete');
+}
+
+// ── RESET ────────────────────────────────────────────────────────────────────
+function resetAssessment() {
+  if (!confirm('Reset all answers? This cannot be undone.')) return;
+  answers = {};
+  currentDomain = 0;
+  document.getElementById('v-name').value = '';
+  document.getElementById('v-assessor').value = '';
+  document.getElementById('v-category').value = '';
+  document.getElementById('v-data').value = '';
+  document.getElementById('v-notes').value = '';
+  renderDomainTabs();
+  renderQuestions();
+  showToast('↺ Assessment reset');
+}
+
+// ── INIT ─────────────────────────────────────────────────────────────────────
+renderDomainTabs();
+renderQuestions();
+</script>
+</body>
+</html>
